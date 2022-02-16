@@ -1,19 +1,19 @@
 class Flight {
-  String flightId;
-  String flightName;
+  String id;
+  String name;
   DateTime departure;
   DateTime arrival;
   String source;
   String destination;
+  String seat;
   int fare;
   String notes;
 
-
-  Flight.name(this.flightId, this.flightName, this.departure, this.arrival,
-      this.source, this.destination, this.fare, this.notes);
+  Flight.builder(this.id, this.name, this.departure, this.arrival, this.source,
+      this.destination, this.seat, this.fare, this.notes);
 
   @override
   String toString() {
-    return 'Flight{flightId: $flightId, flightName: $flightName, departure: $departure, arrival: $arrival, source: $source, destination: $destination, fare: $fare, notes: $notes}';
+    return 'Flight{id: $id, name: $name, departure: $departure, arrival: $arrival, source: $source, destination: $destination, seat: $seat, fare: $fare, notes: $notes}';
   }
 }

@@ -4,10 +4,12 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class FlightList extends StatelessWidget {
-  Flight flight;
+import '../services/Train.dart';
 
-  FlightList({Key? key, required this.flight}) : super(key: key);
+class TrainList extends StatelessWidget {
+  Train train;
+
+  TrainList({Key? key, required this.train}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class FlightList extends StatelessWidget {
       leading: const CircleAvatar(
         backgroundColor: Colors.black,
         child: Icon(
-          Icons.flight_takeoff_outlined,
+          Icons.train_outlined,
           color: Colors.white,
           size: 20.0,
         ),
@@ -28,13 +30,13 @@ class FlightList extends StatelessWidget {
           Column(
             children: [
               Text(
-                flight.source,
+                train.source,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
               Text(
-                DateFormat.jm().format(flight.departure),
+                DateFormat.jm().format(train.departure),
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
@@ -45,13 +47,13 @@ class FlightList extends StatelessWidget {
           Column(
             children: [
               Text(
-                flight.destination,
+                train.destination,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
               Text(
-                DateFormat.jm().format(flight.arrival),
+                DateFormat.jm().format(train.arrival),
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
@@ -61,7 +63,7 @@ class FlightList extends StatelessWidget {
         ],
       ),
       trailing: Text(
-        "${flight.name} ${flight.id}",
+        "${train.name} ${train.id}",
         style: GoogleFonts.quicksand(
           textStyle: const TextStyle(color: Colors.black),
         ),
@@ -83,7 +85,7 @@ class FlightList extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    flight.notes,
+                    train.notes,
                     style: GoogleFonts.quicksand(
                       textStyle: const TextStyle(color: Colors.black),
                     ),
