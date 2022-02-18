@@ -1,46 +1,25 @@
-import 'dart:io';
-
 import 'package:dylan/services/Flight.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../api/pdf_api.dart';
-import '../pages/pdf_viewer.dart';
+import '../services/Train.dart';
 
-class FlightList extends StatefulWidget {
-  Flight flight;
+class HotelList extends StatelessWidget {
+  Train train;
 
-  FlightList({Key? key, required this.flight}) : super(key: key);
-
-  @override
-  State<FlightList> createState() => _FlightListState();
-}
-
-class _FlightListState extends State<FlightList> {
-  late File ticket;
-
-  @override
-  void initState() {
-    super.initState();
-    PDFApi.loadAsset('assets/pdf/boarding_pass.pdf').then((f) {
-      setState(() {
-        ticket = f;
-      });
-    });
-  }
+  HotelList({Key? key, required this.train}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    File file;
     return ExpansionTileCard(
       baseColor: Colors.grey[300],
       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       leading: const CircleAvatar(
         backgroundColor: Colors.black,
         child: Icon(
-          Icons.flight_takeoff_outlined,
+          Icons.train_outlined,
           color: Colors.white,
           size: 20.0,
         ),
@@ -51,13 +30,13 @@ class _FlightListState extends State<FlightList> {
           Column(
             children: [
               Text(
-                widget.flight.source,
+                train.source,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
               Text(
-                DateFormat.jm().format(widget.flight.departure),
+                DateFormat.jm().format(train.departure),
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
@@ -68,13 +47,13 @@ class _FlightListState extends State<FlightList> {
           Column(
             children: [
               Text(
-                widget.flight.destination,
+                train.destination,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
               Text(
-                DateFormat.jm().format(widget.flight.arrival),
+                DateFormat.jm().format(train.arrival),
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
@@ -84,7 +63,7 @@ class _FlightListState extends State<FlightList> {
         ],
       ),
       trailing: Text(
-        "${widget.flight.name} ${widget.flight.id}",
+        "${train.name} ${train.id}",
         style: GoogleFonts.quicksand(
           textStyle: const TextStyle(color: Colors.black),
         ),
@@ -106,19 +85,14 @@ class _FlightListState extends State<FlightList> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.flight.notes,
+                    train.notes,
                     style: GoogleFonts.quicksand(
                       textStyle: const TextStyle(color: Colors.black),
                     ),
                   ),
                 ),
                 IconButton(
-                  onPressed: () => {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => TicketViewer(file: ticket)),
-                    )
-                  },
+                  onPressed: () => {},
                   icon: const CircleAvatar(
                     backgroundColor: Colors.black,
                     child: Icon(Icons.attachment, color: Colors.white),
