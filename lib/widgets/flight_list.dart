@@ -24,11 +24,11 @@ class _FlightListState extends State<FlightList> {
   @override
   void initState() {
     super.initState();
-    PDFApi.loadAsset('assets/pdf/boarding_pass.pdf').then((f) {
-      setState(() {
-        ticket = f;
-      });
-    });
+    // PDFApi.loadAsset('assets/pdf/boarding_pass.pdf').then((f) {
+    //   setState(() {
+    //     ticket = f;
+    //   });
+    // });
   }
 
   @override
@@ -116,7 +116,7 @@ class _FlightListState extends State<FlightList> {
                   onPressed: () => {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (context) => TicketViewer(file: ticket)),
+                          builder: (context) => TicketViewer()),
                     )
                   },
                   icon: const CircleAvatar(
