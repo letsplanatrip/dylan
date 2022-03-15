@@ -1,14 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class TicketViewer extends StatefulWidget {
+class PDFViewer extends StatefulWidget {
+  const PDFViewer({Key? key}) : super(key: key);
+
   @override
-  State<TicketViewer> createState() => _TicketViewerState();
+  State<PDFViewer> createState() => _PDFViewerState();
 }
 
-class _TicketViewerState extends State<TicketViewer> {
+class _PDFViewerState extends State<PDFViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

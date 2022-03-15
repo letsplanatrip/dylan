@@ -1,39 +1,23 @@
-import 'dart:io';
-
+import 'package:dylan/pages/flight_event_form.dart';
+import 'package:dylan/pages/pdf_viewer.dart';
 import 'package:dylan/services/Flight.dart';
-import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
-import '../api/pdf_api.dart';
-import '../pages/pdf_viewer.dart';
+class IteranaryFlightCard extends StatefulWidget {
+  final Flight flight;
 
-class FlightList extends StatefulWidget {
-  Flight flight;
-
-  FlightList({Key? key, required this.flight}) : super(key: key);
+  const IteranaryFlightCard({Key? key, required this.flight}) : super(key: key);
 
   @override
-  State<FlightList> createState() => _FlightListState();
+  State<IteranaryFlightCard> createState() => _IteranaryFlightCardState();
 }
 
-class _FlightListState extends State<FlightList> {
-  late File ticket;
-
-  @override
-  void initState() {
-    super.initState();
-    // PDFApi.loadAsset('assets/pdf/boarding_pass.pdf').then((f) {
-    //   setState(() {
-    //     ticket = f;
-    //   });
-    // });
-  }
-
+class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
   @override
   Widget build(BuildContext context) {
-    File file;
     return ExpansionTileCard(
       baseColor: Colors.grey[300],
       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
@@ -94,6 +78,41 @@ class _FlightListState extends State<FlightList> {
           thickness: 1.0,
           height: 1.0,
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 8.0,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  "PNR: ${widget.flight.pnr}",
+                  style: GoogleFonts.quicksand(
+                    textStyle: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  "Seat: ${widget.flight.seat}",
+                  style: GoogleFonts.quicksand(
+                    textStyle: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  "Fare: Rs. ${widget.flight.fare}",
+                  style: GoogleFonts.quicksand(
+                    textStyle: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -112,11 +131,24 @@ class _FlightListState extends State<FlightList> {
                     ),
                   ),
                 ),
+                SizedBox(width: 10,),
                 IconButton(
                   onPressed: () => {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (context) => TicketViewer()),
+                          builder: (context) => FlightEventForm(widget.flight)),
+                    )
+                  },
+                  icon: const CircleAvatar(
+                    backgroundColor: Colors.black,
+                    child: Icon(Icons.edit, color: Colors.white),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const PDFViewer()),
                     )
                   },
                   icon: const CircleAvatar(
