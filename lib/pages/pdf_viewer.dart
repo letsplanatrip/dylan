@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -16,8 +18,8 @@ class _PDFViewerState extends State<PDFViewer> {
         child: Column(children: [
           Expanded(
             flex: 1,
-            child: SfPdfViewer.asset(
-              "assets/boarding_pass.pdf",
+            child: SfPdfViewer.file(
+              File("/data/user/0/com.letsplanatrip.dylan/cache/file_picker/boarding_pass.pdf"),
             ),
           ),
         ]),
