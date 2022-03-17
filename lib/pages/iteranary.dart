@@ -83,10 +83,22 @@ class _IteranaryState extends State<Iteranary> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: Text("Iteranary"),
+          backgroundColor: Colors.black,
         centerTitle: true,
-        elevation: 0,
+          title:  TextButton.icon(
+              icon: const Icon(
+                Icons.list,
+                color: Colors.white,
+              ),
+              label: const Text(
+                "Iteranary",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: () => {}
+          )
       ),
       body: Column(
         children: [

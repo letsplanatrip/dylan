@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:dylan/services/Flight.dart';
 import 'package:flutter/material.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -15,31 +17,55 @@ class FlightEventForm extends StatefulWidget {
 
 class _FlightEventFormState extends State<FlightEventForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final flightIDController = TextEditingController();
+  final flightNameController = TextEditingController();
+  final sourceController = TextEditingController();
+  final destinationController = TextEditingController();
+  final departureController = TextEditingController();
+  final arrivalController = TextEditingController();
+  final pnrController = TextEditingController();
+  final seatController = TextEditingController();
+  final fareController = TextEditingController();
+  final notesController = TextEditingController();
+  late final _flight;
+
+  @override
+  void dispose() {
+    flightIDController.dispose();
+    flightNameController.dispose();
+    sourceController.dispose();
+    destinationController.dispose();
+    departureController.dispose();
+    arrivalController.dispose();
+    pnrController.dispose();
+    seatController.dispose();
+    fareController.dispose();
+    notesController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
     initializeDateFormatting();
+    flightIDController.text = widget._flight.id;
+    flightNameController.text = widget._flight.name;
+    sourceController.text = widget._flight.source;
+    destinationController.text = widget._flight.destination;
+    departureController.text = widget._flight.departure.toString();
+    arrivalController.text = widget._flight.arrival.toString();
+    pnrController.text = widget._flight.pnr;
+    seatController.text = widget._flight.seat;
+    fareController.text = widget._flight.fare.toString();
+    notesController.text = widget._flight.notes;
   }
 
-  Widget _textBox(String label) {
-    return Flexible(
-      child: TextField(
-        decoration: InputDecoration(
-          border: const UnderlineInputBorder(),
-          labelText: label,
-        ),
-        controller: TextEditingController(text: "Aurobindo"),
-      ),
-    );
-  }
-
-  Widget _dateTime(String label) {
+  Widget _dateTime(String label, DateTime value) {
     return Flexible(
       child: DateTimePicker(
         type: DateTimePickerType.dateTime,
         dateMask: 'd/M/yy - hh:mm a',
-        // controller: TextEditingController(text: DateTime.now().toString()),
+        controller: TextEditingController(text: value.toString()),
         firstDate: DateTime(2000),
         lastDate: DateTime(2100),
         //icon: Icon(Icons.event),
@@ -47,7 +73,7 @@ class _FlightEventFormState extends State<FlightEventForm> {
         use24HourFormat: false,
         locale: const Locale('en', 'US'),
         onChanged: (val) => {},
-        onSaved: (val) => {},
+        onSaved: (val) => {print(val)},
       ),
     );
   }
@@ -56,8 +82,20 @@ class _FlightEventFormState extends State<FlightEventForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flight"),
-      ),
+          backgroundColor: Colors.black,
+          title: TextButton.icon(
+              icon: const Icon(
+                Icons.flight_takeoff_outlined,
+                color: Colors.white,
+              ),
+              label: const Text(
+                "Flight",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: () => {})),
       body: Container(
         padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
         child: Form(
@@ -65,11 +103,29 @@ class _FlightEventFormState extends State<FlightEventForm> {
             children: [
               Row(
                 children: [
-                  _textBox("FlightID"),
+                  // Flight ID Text Field
+                  Flexible(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: "Flight ID",
+                      ),
+                      controller: flightIDController,
+                    ),
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
-                  _textBox("FlightName"),
+                  // Flight Name Text Field
+                  Flexible(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: "Flight Name",
+                      ),
+                      controller: flightNameController,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(
@@ -77,11 +133,29 @@ class _FlightEventFormState extends State<FlightEventForm> {
               ),
               Row(
                 children: [
-                  _textBox("Source"),
+                  // Source Text Field
+                  Flexible(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: "Source",
+                      ),
+                      controller: sourceController,
+                    ),
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
-                  _textBox("Destination"),
+                  // Destination Text Field
+                  Flexible(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: "Destination",
+                      ),
+                      controller: destinationController,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(
@@ -89,11 +163,37 @@ class _FlightEventFormState extends State<FlightEventForm> {
               ),
               Row(
                 children: [
-                  _dateTime("Departure"),
+                  Flexible(
+                    child: DateTimePicker(
+                      type: DateTimePickerType.dateTime,
+                      dateMask: 'd/M/yy - hh:mm a',
+                      controller: departureController,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: "Departure",
+                      use24HourFormat: false,
+                      locale: const Locale('en', 'US'),
+                      onChanged: (val) => {},
+                      onSaved: (val) => {},
+                    ),
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
-                  _dateTime("Arrival"),
+                  Flexible(
+                    child: DateTimePicker(
+                      type: DateTimePickerType.dateTime,
+                      dateMask: 'd/M/yy - hh:mm a',
+                      controller: arrivalController,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: "Arrival",
+                      use24HourFormat: false,
+                      locale: const Locale('en', 'US'),
+                      onChanged: (val) => {},
+                      onSaved: (val) => {},
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(
@@ -101,15 +201,42 @@ class _FlightEventFormState extends State<FlightEventForm> {
               ),
               Row(
                 children: [
-                  _textBox("PNR"),
+                  // PNR Text Field
+                  Flexible(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: "PNR",
+                      ),
+                      controller: pnrController,
+                    ),
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
-                  _textBox("Seat"),
+                  // Seat Text Field
+                  Flexible(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: "Seat",
+                      ),
+                      controller: seatController,
+                    ),
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
-                  _textBox("Fare"),
+                  // Fare Text Field
+                  Flexible(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: "Fare",
+                      ),
+                      controller: fareController,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(
@@ -117,10 +244,42 @@ class _FlightEventFormState extends State<FlightEventForm> {
               ),
               Row(
                 children: [
-                  _textBox("Notes"),
+                  Flexible(
+                    child: TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: "Notes",
+                      ),
+                      controller: notesController,
+                    ),
+                  ),
                 ],
               ),
-              ElevatedButton(onPressed: () => {}, child: Text("Submit"))
+              const SizedBox(
+                height: 40,
+              ),
+              ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.black),
+                  ),
+                  onPressed: () => {
+                        _flight = Flight(
+                            flightIDController.text,
+                            flightNameController.text,
+                            pnrController.text,
+                            DateTime.parse(departureController.text),
+                            DateTime.parse(arrivalController.text),
+                            sourceController.text,
+                            destinationController.text,
+                            seatController.text,
+                            int.parse(fareController.text),
+                            notesController.text,
+                            "assets/pdf/boarding_pass.pdf"),
+                        print(_flight)
+                      },
+                  child: const Text("Update"))
             ],
           ),
         ),
