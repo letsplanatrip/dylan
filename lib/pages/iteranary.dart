@@ -1,46 +1,26 @@
-import 'package:dylan/db/flight_db_handler.dart';
 import 'package:dylan/models/Train.dart';
+import 'package:dylan/models/Flight.dart';
+import 'package:dylan/widgets/date_card.dart';
 import 'package:dylan/widgets/flight_card.dart';
-import 'package:dylan/widgets/train_list.dart';
+import 'package:dylan/widgets/train_card.dart';
 import 'package:flutter/material.dart';
-
-import '../models/Flight.dart';
 
 class Iteranary extends StatefulWidget {
   final List<Flight?>? _flights;
+  final List<Train?>? _trains;
 
-  const Iteranary(this._flights, {Key? key}) : super(key: key);
+  const Iteranary(this._flights, this._trains, {Key? key}) : super(key: key);
 
   @override
   _IteranaryState createState() => _IteranaryState();
 }
 
 class _IteranaryState extends State<Iteranary> {
-  final List _trains = [
-    Train.builder(
-        "12342",
-        "Duronto",
-        DateTime.parse("2021-12-24 12:35:00Z"),
-        DateTime.parse("2021-12-24 13:45:00Z"),
-        "HWH",
-        "YPR",
-        "CNF/SU/34",
-        4536,
-        "Train to Bangalore "),
-    Train.builder(
-        "12342",
-        "Duronto",
-        DateTime.parse("2021-12-24 12:35:00Z"),
-        DateTime.parse("2021-12-24 13:45:00Z"),
-        "HWH",
-        "YPR",
-        "CNF/LB/32",
-        4536,
-        "Train to Bangalore "),
-  ];
+  late List _iteranary;
 
   @override
   Widget build(BuildContext context) {
+    _iteranary = sortIteranary(widget._flights, widget._trains);
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -59,39 +39,52 @@ class _IteranaryState extends State<Iteranary> {
                 ),
               ),
               onPressed: () => {})),
-      body: Column(
-        children: [
-          ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: widget._flights?.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
-                  child: IteranaryFlightCard(
-                    flight: widget._flights![index],
-                  ),
-                );
-              }),
-          ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: _trains.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
-                  child: TrainList(
-                    train: _trains[index],
-                  ),
-                );
-              }),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            IteranaryDateCard(date:DateTime.parse("2021-12-16 00:00:00").microsecondsSinceEpoch),
+            ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _iteranary.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
+                    child: card(_iteranary[index]),
+                  );
+                }),
+            IteranaryDateCard(date:DateTime.parse("2021-12-17 00:00:00").microsecondsSinceEpoch),
+            ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _iteranary.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
+                    child: card(_iteranary[index]),
+                  );
+                }),
+          ],
+        ),
       ),
     );
   }
 
-  Future<List<Flight?>?> getFlightsForTrip(String tripId) async {
-    List<Flight?>? flights = await FlightDbHandler().getFlightsForTrip(tripId);
-    return flights;
+  sortIteranary(List<Flight?>? flights, List<Train?>? trains) {
+    List iteranary = [...?flights, ...?trains];
+    iteranary.sort((a, b) => a.departure.compareTo(b.departure));
+    return iteranary;
+  }
+
+  Container? card(Object obj) {
+    if (obj is Flight) {
+      return Container(
+        child: IteranaryFlightCard(flight: obj as Flight),
+      );
+    } else if (obj is Train) {
+      return Container(
+        child: IteranaryTrainCard(train: obj as Train),
+      );
+    }
   }
 }
