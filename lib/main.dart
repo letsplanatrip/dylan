@@ -1,14 +1,11 @@
 import 'package:dylan/pages/home.dart';
-import 'package:dylan/pages/iteranary.dart';
-import 'package:dylan/pages/pdf_viewer.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    initialRoute: "/iteranary",
+    initialRoute: "/",
     routes: {
       "/": (context) => Home(),
-      "/iteranary": (context) => Iteranary(),
     },
   ));
 }

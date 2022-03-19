@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class PDFViewer extends StatefulWidget {
-  const PDFViewer({Key? key}) : super(key: key);
+class TicketDisplay extends StatefulWidget {
+  final String _ticketPath;
+
+  const TicketDisplay(this._ticketPath, {Key? key}) : super(key: key);
 
   @override
-  State<PDFViewer> createState() => _PDFViewerState();
+  State<TicketDisplay> createState() => _TicketDisplayState();
 }
 
-class _PDFViewerState extends State<PDFViewer> {
+class _TicketDisplayState extends State<TicketDisplay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +21,7 @@ class _PDFViewerState extends State<PDFViewer> {
           Expanded(
             flex: 1,
             child: SfPdfViewer.file(
-              File("/data/user/0/com.letsplanatrip.dylan/cache/file_picker/boarding_pass.pdf"),
+              File(widget._ticketPath),
             ),
           ),
         ]),

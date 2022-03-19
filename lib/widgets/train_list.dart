@@ -1,15 +1,13 @@
-import 'package:dylan/services/Flight.dart';
+import 'package:dylan/models/Train.dart';
 import 'package:flutter/material.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../services/Train.dart';
-
 class TrainList extends StatelessWidget {
-  Train train;
+  final Train train;
 
-  TrainList({Key? key, required this.train}) : super(key: key);
+  const TrainList({Key? key, required this.train}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

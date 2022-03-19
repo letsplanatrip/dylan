@@ -1,8 +1,8 @@
-import 'package:dylan/services/Flight.dart';
-import 'package:flutter/material.dart';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:dylan/models/Flight.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class FlightEventForm extends StatefulWidget {
   final Flight _flight;
@@ -48,7 +48,7 @@ class _FlightEventFormState extends State<FlightEventForm> {
   void initState() {
     super.initState();
     initializeDateFormatting();
-    flightIDController.text = widget._flight.id;
+    flightIDController.text = widget._flight.flightId;
     flightNameController.text = widget._flight.name;
     sourceController.text = widget._flight.source;
     destinationController.text = widget._flight.destination;
@@ -59,24 +59,6 @@ class _FlightEventFormState extends State<FlightEventForm> {
     fareController.text = widget._flight.fare.toString();
     notesController.text = widget._flight.notes;
     ticketController.text = widget._flight.ticket;
-  }
-
-  Widget _dateTime(String label, DateTime value) {
-    return Flexible(
-      child: DateTimePicker(
-        type: DateTimePickerType.dateTime,
-        dateMask: 'd/M/yy - hh:mm a',
-        controller: TextEditingController(text: value.toString()),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100),
-        //icon: Icon(Icons.event),
-        dateLabelText: label,
-        use24HourFormat: false,
-        locale: const Locale('en', 'US'),
-        onChanged: (val) => {},
-        onSaved: (val) => {print(val)},
-      ),
-    );
   }
 
   @override
@@ -294,20 +276,21 @@ class _FlightEventFormState extends State<FlightEventForm> {
                     ),
                     onPressed: () => {
                           _flight = Flight(
-                              flightIDController.text,
-                              flightNameController.text,
-                              pnrController.text,
-                              DateTime.parse(departureController.text),
-                              DateTime.parse(arrivalController.text),
-                              sourceController.text,
-                              destinationController.text,
-                              seatController.text,
-                              int.parse(fareController.text),
-                              notesController.text,
-                              ticketController.text),
-                          print(_flight),
+                              id: widget._flight.id,
+                              flightId: flightIDController.text,
+                              name: flightNameController.text,
+                              pnr: pnrController.text,
+                              departure: int.parse(departureController.text),
+                              arrival: int.parse(arrivalController.text),
+                              source: sourceController.text,
+                              destination: destinationController.text,
+                              seat: seatController.text,
+                              fare: int.parse(fareController.text),
+                              notes: notesController.text,
+                              ticket: ticketController.text,
+                              tripId: widget._flight.tripId),
                         },
-                    child: const Text("Update"))
+                    child: const Text("Update")),
               ],
             ),
           ),

@@ -1,60 +1,21 @@
-import 'package:dylan/services/Flight.dart';
-import 'package:dylan/widgets/iteranary/flight_card.dart';
+import 'package:dylan/db/flight_db_handler.dart';
+import 'package:dylan/models/Train.dart';
+import 'package:dylan/widgets/flight_card.dart';
 import 'package:dylan/widgets/train_list.dart';
 import 'package:flutter/material.dart';
 
-import '../services/Train.dart';
+import '../models/Flight.dart';
 
 class Iteranary extends StatefulWidget {
-  const Iteranary({Key? key}) : super(key: key);
+  final List<Flight?>? _flights;
+
+  const Iteranary(this._flights, {Key? key}) : super(key: key);
 
   @override
   _IteranaryState createState() => _IteranaryState();
 }
 
 class _IteranaryState extends State<Iteranary> {
-  final List _flights = [
-    Flight(
-        "6E-751",
-        "Indigo",
-        "A2H9QZ",
-        DateTime.parse("2021-12-24 12:35:00Z"),
-        DateTime.parse("2021-12-24 13:45:00Z"),
-        "CCU",
-        "IXB",
-        "6F",
-        4536,
-        "Flights to Bagdogra is a most heavily planned flight in most of the world",
-        "assets/pdf/boarding_pass.pdf"
-    ),
-    Flight(
-        "AI-747",
-        "Air India",
-        "A2H9QZ",
-        DateTime.parse("2021-12-24 12:35:00Z"),
-        DateTime.parse("2021-12-24 13:45:00Z"),
-        "CCU",
-        "IXB",
-        "6F",
-        4536,
-        "Flights to Bagdogra",
-        "assets/pdf/boarding_pass.pdf"
-    ),
-    Flight(
-        "AI-747",
-        "Air India",
-        "A2H9QZ",
-        DateTime.parse("2021-12-24 12:35:00Z"),
-        DateTime.parse("2021-12-24 13:45:00Z"),
-        "CCU",
-        "IXB",
-        "6F",
-        4536,
-        "Flights to Bagdogra",
-        "assets/pdf/boarding_pass.pdf"
-    ),
-  ];
-
   final List _trains = [
     Train.builder(
         "12342",
@@ -84,8 +45,8 @@ class _IteranaryState extends State<Iteranary> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
           backgroundColor: Colors.black,
-        centerTitle: true,
-          title:  TextButton.icon(
+          centerTitle: true,
+          title: TextButton.icon(
               icon: const Icon(
                 Icons.list,
                 color: Colors.white,
@@ -97,20 +58,18 @@ class _IteranaryState extends State<Iteranary> {
                   fontSize: 20,
                 ),
               ),
-              onPressed: () => {}
-          )
-      ),
+              onPressed: () => {})),
       body: Column(
         children: [
           ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: _flights.length,
+              itemCount: widget._flights?.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
                   child: IteranaryFlightCard(
-                    flight: _flights[index],
+                    flight: widget._flights![index],
                   ),
                 );
               }),
@@ -129,5 +88,10 @@ class _IteranaryState extends State<Iteranary> {
         ],
       ),
     );
+  }
+
+  Future<List<Flight?>?> getFlightsForTrip(String tripId) async {
+    List<Flight?>? flights = await FlightDbHandler().getFlightsForTrip(tripId);
+    return flights;
   }
 }
