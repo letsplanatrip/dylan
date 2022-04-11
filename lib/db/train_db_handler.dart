@@ -24,7 +24,7 @@ class TrainDbHandler {
     seat TEXT NOT NULL,
     berth TEXT NOT NULL,
     status TEXT NOT NULL,
-    fare INTEGER NOT NULL,
+    fare NUMERIC NOT NULL,
     notes TEXT NOT NULL,
     ticket TEXT NOT NULL,
     tripId INTEGER NOT NULL

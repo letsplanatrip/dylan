@@ -12,7 +12,7 @@ class Train {
   final String seat;
   final String berth;
   final String status;
-  final int fare;
+  final double fare;
   final String notes;
   final String ticket;
   final int tripId;
@@ -52,10 +52,10 @@ class Train {
           String? seat,
           String? berth,
           String? status,
-          int? fare,
+          double? fare,
           String? notes,
           String? ticket,
-            int? tripId}) =>
+          int? tripId}) =>
       Train(
           id: id ?? this.id,
           eventTs: eventTs ?? this.eventTs,
@@ -89,7 +89,7 @@ class Train {
       seat: json['seat'],
       berth: json['berth'],
       status: json['status'],
-      fare: int.parse(json['fare'].toString()),
+      fare: double.parse(json['fare'].toString()),
       notes: json['notes'],
       ticket: json['ticket'],
       tripId: int.parse(json['tripId'].toString()));

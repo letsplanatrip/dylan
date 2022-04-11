@@ -21,7 +21,7 @@ class FlightDbHandler {
     source TEXT NOT NULL,
     destination TEXT NOT NULL,
     seat TEXT NOT NULL,
-    fare INTEGER NOT NULL,
+    fare NUMERIC NOT NULL,
     notes TEXT NOT NULL,
     ticket TEXT NOT NULL,
     tripId INTEGER NOT NULL

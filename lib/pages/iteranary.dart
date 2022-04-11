@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:dylan/db/flight_db_handler.dart';
+import 'package:dylan/db/hotel_db_handler.dart';
 import 'package:dylan/db/train_db_handler.dart';
 import 'package:dylan/db/trip_db_handler.dart';
 import 'package:dylan/models/Trip.dart';
 import 'package:dylan/models/flight.dart';
+import 'package:dylan/models/hotel.dart';
 import 'package:dylan/models/train.dart';
 import 'package:dylan/widgets/date_card.dart';
 import 'package:dylan/widgets/flight_card.dart';
+import 'package:dylan/widgets/hotel_card.dart';
 import 'package:dylan/widgets/train_card.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
@@ -71,6 +74,11 @@ class _IteranaryState extends State<Iteranary> {
         train: obj,
         notifyParent: refresh,
       );
+    } else if (obj is Hotel) {
+      return IteranaryHotelCard(
+        hotel: obj,
+        notifyParent: refresh,
+      );
     }
     return const SizedBox(
       height: 0,
@@ -81,6 +89,7 @@ class _IteranaryState extends State<Iteranary> {
     Map<int, List<dynamic>?> iteranaryList = {};
     List<Flight?>? flights = [];
     List<Train?>? trains = [];
+    List<Hotel?>? hotels = [];
     List iteranary = [];
 
     _trip = (await TripDbHandler().getTripById(widget.tripId))!;
@@ -88,7 +97,8 @@ class _IteranaryState extends State<Iteranary> {
     for (int ts = _trip.startDate; ts <= _trip.endDate; ts += 86400000000) {
       flights = await FlightDbHandler().getFlightsForTripAndDate(_trip.id!, ts);
       trains = await TrainDbHandler().getTrainsForTripAndDate(_trip.id!, ts);
-      iteranary = [...?flights, ...?trains];
+      hotels = await HotelDbHandler().getHotelsForTripAndDate(_trip.id!, ts);
+      iteranary = [...?flights, ...?trains, ...?hotels];
       iteranary.sort((a, b) => a.eventTs.compareTo(b.eventTs));
       iteranaryList[ts] = iteranary;
     }

@@ -286,7 +286,7 @@ class _FlightFormState extends State<FlightForm> {
                               source: sourceController.text,
                               destination: destinationController.text,
                               seat: seatController.text,
-                              fare: int.parse(fareController.text),
+                              fare: double.parse(fareController.text),
                               notes: notesController.text,
                               ticket: ticketController.text,
                               tripId: widget._flight.tripId),

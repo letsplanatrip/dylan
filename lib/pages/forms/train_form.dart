@@ -341,7 +341,7 @@ class _TrainFormState extends State<TrainForm> {
                               seat: seatController.text,
                               berth: berthController.text,
                               status: statusController.text,
-                              fare: int.parse(fareController.text),
+                              fare: double.parse(fareController.text),
                               notes: notesController.text,
                               ticket: ticketController.text,
                               tripId: widget._train.tripId),

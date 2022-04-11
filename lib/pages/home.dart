@@ -1,4 +1,5 @@
 import 'package:dylan/db/flight_db_handler.dart';
+import 'package:dylan/db/hotel_db_handler.dart';
 import 'package:dylan/db/train_db_handler.dart';
 import 'package:dylan/db/trip_db_handler.dart';
 import 'package:dylan/models/flight.dart';
@@ -53,5 +54,6 @@ class _HomeState extends State<Home> {
     await TripDbHandler().initTrips();
     await FlightDbHandler().initFlights();
     await TrainDbHandler().initTrains();
+    await HotelDbHandler().initHotels();
   }
 }

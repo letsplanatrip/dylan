@@ -9,7 +9,7 @@ class Flight {
   final String source;
   final String destination;
   final String seat;
-  final int fare;
+  final double fare;
   final String notes;
   final String ticket;
   final int tripId;
@@ -43,7 +43,7 @@ class Flight {
           String? source,
           String? destination,
           String? seat,
-          int? fare,
+          double? fare,
           String? notes,
           String? ticket,
           int? tripId}) =>
@@ -74,7 +74,7 @@ class Flight {
       source: json['source'],
       destination: json['destination'],
       seat: json['seat'],
-      fare: int.parse(json['fare'].toString()),
+      fare: double.parse(json['fare'].toString()),
       notes: json['notes'],
       ticket: json['ticket'],
       tripId: int.parse(json['tripId'].toString()));
