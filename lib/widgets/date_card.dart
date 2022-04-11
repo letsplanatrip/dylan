@@ -19,12 +19,7 @@ class _IteranaryDateCardState extends State<IteranaryDateCard> {
   @override
   Widget build(BuildContext context) {
     return Row(children: <Widget>[
-      const SizedBox(height: 20,),
-      const Expanded(child: Divider(
-        color: Colors.black,
-        thickness: 1.2,
-      )),
-      const SizedBox(width: 10,),
+      const SizedBox(width: 20, height: 25,),
       Text(
           DateFormat.yMMMMEEEEd().format(DateTime.fromMicrosecondsSinceEpoch(widget.date)),
         style: GoogleFonts.quicksand(
@@ -33,12 +28,11 @@ class _IteranaryDateCardState extends State<IteranaryDateCard> {
           fontWeight: FontWeight.bold
         ),
       ),
-      const SizedBox(width: 10,),
-      const Expanded(child: Divider(
-        color: Colors.black,
-        thickness: 1.2,
-      )),
-      const SizedBox(height: 20,),
+      // const Expanded(child: Divider(
+      //   color: Colors.black,
+      //   thickness: 1.2,
+      // )),
+      // const SizedBox(height: 20,),
     ]);
   }
 }
