@@ -1,5 +1,6 @@
 import 'package:dylan/models/hotel.dart';
 import 'package:dylan/pages/display/ticket_display.dart';
+import 'package:dylan/pages/forms/hotel_form.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,9 +8,10 @@ import 'package:intl/intl.dart';
 
 class IteranaryHotelCard extends StatefulWidget {
   final Hotel? hotel;
+  final int? date;
   final Function()? notifyParent;
 
-  const IteranaryHotelCard({Key? key, this.hotel, this.notifyParent})
+  const IteranaryHotelCard({Key? key, this.date, this.hotel, this.notifyParent})
       : super(key: key);
 
   @override
@@ -44,18 +46,13 @@ class _IteranaryHotelCardState extends State<IteranaryHotelCard> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_hotel.name,
+              Text(
+                _hotel.name,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
-            Text(
-                "CheckIn: " + DateFormat.jm()
-                    .format(DateTime.fromMicrosecondsSinceEpoch(_hotel.checkIn)),
-                style: GoogleFonts.quicksand(
-                  textStyle: const TextStyle(color: Colors.black),
-                ),
-              ),
+              getHotelStatus(),
             ],
           ),
         ],
@@ -81,7 +78,7 @@ class _IteranaryHotelCardState extends State<IteranaryHotelCard> {
             children: [
               Expanded(
                 child: Text(
-                  "Room: ${_hotel.roomType} (${_hotel.roomNumber})",
+                  "Room: ${_hotel.roomNumber}",
                   style: GoogleFonts.quicksand(
                     textStyle: const TextStyle(color: Colors.black),
                   ),
@@ -90,6 +87,14 @@ class _IteranaryHotelCardState extends State<IteranaryHotelCard> {
               Expanded(
                 child: Text(
                   "Fare: Rs. ${_hotel.fare}",
+                  style: GoogleFonts.quicksand(
+                    textStyle: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  "Phone: ${_hotel.phone}",
                   style: GoogleFonts.quicksand(
                     textStyle: const TextStyle(color: Colors.black),
                   ),
@@ -120,14 +125,13 @@ class _IteranaryHotelCardState extends State<IteranaryHotelCard> {
                   width: 10,
                 ),
                 IconButton(
-                  onPressed: () async => {},
-                  // {
-                  //   _hotel = await Navigator.of(context).push(
-                  //     MaterialPageRoute(
-                  //         builder: (context) => HotelForm(_hotel)),
-                  //   ),
-                  //   widget.notifyParent!()
-                  // },
+                  onPressed: () async => {
+                    _hotel = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => HotelForm(_hotel)),
+                    ),
+                    widget.notifyParent!()
+                  },
                   icon: const CircleAvatar(
                     backgroundColor: Colors.black,
                     child: Icon(Icons.edit, color: Colors.white),
@@ -151,5 +155,52 @@ class _IteranaryHotelCardState extends State<IteranaryHotelCard> {
         ),
       ],
     );
+  }
+
+  Widget getHotelStatus() {
+    if (widget.hotel!.checkIn >= widget.date! &&
+        widget.hotel!.checkIn < widget.date! + 86400000000 &&
+        widget.hotel!.checkOut >= widget.date! &&
+        widget.hotel!.checkOut < widget.date! + 86400000000) {
+      return Row(
+        children: [
+          Text(
+              "CheckIn: " +
+                  DateFormat.jm().format(
+                      DateTime.fromMicrosecondsSinceEpoch(_hotel.checkIn)),
+              style: GoogleFonts.quicksand(
+                textStyle: const TextStyle(color: Colors.black),
+              )),
+          Text(
+              "CheckOut: " +
+                  DateFormat.jm().format(
+                      DateTime.fromMicrosecondsSinceEpoch(_hotel.checkOut)),
+              style: GoogleFonts.quicksand(
+                textStyle: const TextStyle(color: Colors.black),
+              )),
+        ],
+      );
+    } else if (widget.hotel!.checkIn >= widget.date! &&
+        widget.hotel!.checkIn < widget.date! + 86400000000) {
+      return Text(
+          "CheckIn: " +
+              DateFormat.jm()
+                  .format(DateTime.fromMicrosecondsSinceEpoch(_hotel.checkIn)),
+          style: GoogleFonts.quicksand(
+            textStyle: const TextStyle(color: Colors.black),
+          ));
+    } else if (widget.hotel!.checkOut >= widget.date! &&
+        widget.hotel!.checkOut < widget.date! + 86400000000) {
+      return Text(
+          "CheckOut: " +
+              DateFormat.jm()
+                  .format(DateTime.fromMicrosecondsSinceEpoch(_hotel.checkOut)),
+          style: GoogleFonts.quicksand(
+            textStyle: const TextStyle(color: Colors.black),
+          ));
+    }
+    return Text("Stay in Hotel",
+        style: GoogleFonts.quicksand(
+            textStyle: const TextStyle(color: Colors.black)));
   }
 }

@@ -81,8 +81,8 @@ class HotelDbHandler {
     int startTs = ts;
     int endTs = ts + 86400000000 - 1;
     List<Map<String, Object?>>? result = await db?.query(_table,
-        where: "tripId = ? AND eventTs >= ? AND eventTs <= ?",
-        whereArgs: [tripId, startTs, endTs],
+        where: "tripId = ? AND ((checkIn >= ? AND checkIn <= ?) OR (checkIn <= ? AND checkOut >= ?) OR (checkOut >= ? AND checkOut <= ?))",
+        whereArgs: [tripId, startTs, endTs, startTs, endTs, startTs, endTs],
         orderBy: "eventTs ASC");
     return result?.map((hotelJSON) => Hotel.fromJSON(hotelJSON)).toList();
   }

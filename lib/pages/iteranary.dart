@@ -63,7 +63,7 @@ class _IteranaryState extends State<Iteranary> {
     );
   }
 
-  Widget card(Object obj) {
+  Widget card(int key, Object obj) {
     if (obj is Flight) {
       return IteranaryFlightCard(
         flight: obj,
@@ -76,6 +76,7 @@ class _IteranaryState extends State<Iteranary> {
       );
     } else if (obj is Hotel) {
       return IteranaryHotelCard(
+        date: key,
         hotel: obj,
         notifyParent: refresh,
       );
@@ -119,7 +120,7 @@ class _IteranaryState extends State<Iteranary> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
-                child: card(value[index]),
+                child: card(key, value[index]),
               );
             }));
       }
