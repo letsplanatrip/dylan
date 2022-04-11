@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:dylan/db/flight_db_handler.dart';
 import 'package:dylan/db/train_db_handler.dart';
 import 'package:dylan/db/trip_db_handler.dart';
+import 'package:dylan/models/Trip.dart';
 import 'package:dylan/models/flight.dart';
 import 'package:dylan/models/train.dart';
 import 'package:dylan/widgets/date_card.dart';
 import 'package:dylan/widgets/flight_card.dart';
 import 'package:dylan/widgets/train_card.dart';
 import 'package:flutter/material.dart';
-
-import '../models/Trip.dart';
+import 'package:logging/logging.dart';
 
 class Iteranary extends StatefulWidget {
   final int tripId;
@@ -22,12 +22,14 @@ class Iteranary extends StatefulWidget {
 }
 
 class _IteranaryState extends State<Iteranary> {
-  List<dynamic>? _iteranary = [];
+  static final _log = Logger('Iteranary');
+
   late Trip _trip;
   Map<int, List<dynamic>?> _iteranaryList = {};
 
   @override
   void initState() {
+    _log.fine("Initialize Iteranary");
     _initialize();
     super.initState();
   }
@@ -75,27 +77,24 @@ class _IteranaryState extends State<Iteranary> {
     );
   }
 
-  refresh() {
-    setState(() {});
-  }
-
   FutureOr<void> _initialize() async {
+    Map<int, List<dynamic>?> iteranaryList = {};
     List<Flight?>? flights = [];
     List<Train?>? trains = [];
     List iteranary = [];
 
     _trip = (await TripDbHandler().getTripById(widget.tripId))!;
-    print(_trip.toJSON());
+    _log.fine(_trip.toJSON());
     for (int ts = _trip.startDate; ts <= _trip.endDate; ts += 86400000000) {
       flights = await FlightDbHandler().getFlightsForTripAndDate(_trip.id!, ts);
       trains = await TrainDbHandler().getTrainsForTripAndDate(_trip.id!, ts);
       iteranary = [...?flights, ...?trains];
       iteranary.sort((a, b) => a.eventTs.compareTo(b.eventTs));
-      setState(() {
-        _iteranaryList[ts] = iteranary;
-      });
+      iteranaryList[ts] = iteranary;
     }
-    refresh();
+    setState(() {
+      _iteranaryList = iteranaryList;
+    });
   }
 
   Widget _getIteranaryColumn() {
@@ -117,5 +116,10 @@ class _IteranaryState extends State<Iteranary> {
     });
 
     return Column(children: columnEntries);
+  }
+
+  refresh() {
+    _log.finest("Refreshing the UI");
+    setState(() {});
   }
 }

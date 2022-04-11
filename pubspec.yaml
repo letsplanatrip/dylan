@@ -29,6 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  logging: ^1.0.2
   grouped_list: ^4.2.0
   expansion_tile_card: ^2.0.0
   intl: ^0.17.0
