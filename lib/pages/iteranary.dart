@@ -1,26 +1,39 @@
-import 'package:dylan/models/Train.dart';
-import 'package:dylan/models/Flight.dart';
+import 'dart:async';
+
+import 'package:dylan/db/flight_db_handler.dart';
+import 'package:dylan/db/train_db_handler.dart';
+import 'package:dylan/db/trip_db_handler.dart';
+import 'package:dylan/models/flight.dart';
+import 'package:dylan/models/train.dart';
 import 'package:dylan/widgets/date_card.dart';
 import 'package:dylan/widgets/flight_card.dart';
 import 'package:dylan/widgets/train_card.dart';
 import 'package:flutter/material.dart';
 
-class Iteranary extends StatefulWidget {
-  final List<Flight?>? _flights;
-  final List<Train?>? _trains;
+import '../models/Trip.dart';
 
-  const Iteranary(this._flights, this._trains, {Key? key}) : super(key: key);
+class Iteranary extends StatefulWidget {
+  final int tripId;
+
+  const Iteranary(this.tripId, {Key? key}) : super(key: key);
 
   @override
   _IteranaryState createState() => _IteranaryState();
 }
 
 class _IteranaryState extends State<Iteranary> {
-  late List _iteranary;
+  List<dynamic>? _iteranary = [];
+  late Trip _trip;
+  Map<int, List<dynamic>?> _iteranaryList = {};
+
+  @override
+  void initState() {
+    _initialize();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _iteranary = sortIteranary(widget._flights, widget._trains);
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -40,51 +53,69 @@ class _IteranaryState extends State<Iteranary> {
               ),
               onPressed: () => {})),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            IteranaryDateCard(date:DateTime.parse("2021-12-16 00:00:00").microsecondsSinceEpoch),
-            ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _iteranary.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
-                    child: card(_iteranary[index]),
-                  );
-                }),
-            IteranaryDateCard(date:DateTime.parse("2021-12-17 00:00:00").microsecondsSinceEpoch),
-            ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _iteranary.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
-                    child: card(_iteranary[index]),
-                  );
-                }),
-          ],
-        ),
+        child: _getIteranaryColumn(),
       ),
     );
   }
 
-  sortIteranary(List<Flight?>? flights, List<Train?>? trains) {
-    List iteranary = [...?flights, ...?trains];
-    iteranary.sort((a, b) => a.departure.compareTo(b.departure));
-    return iteranary;
-  }
-
-  Container? card(Object obj) {
+  Widget card(Object obj) {
     if (obj is Flight) {
-      return Container(
-        child: IteranaryFlightCard(flight: obj as Flight),
+      return IteranaryFlightCard(
+        flight: obj,
+        notifyParent: refresh,
       );
     } else if (obj is Train) {
-      return Container(
-        child: IteranaryTrainCard(train: obj as Train),
+      return IteranaryTrainCard(
+        train: obj,
+        notifyParent: refresh,
       );
     }
+    return const SizedBox(
+      height: 0,
+    );
+  }
+
+  refresh() {
+    setState(() {});
+  }
+
+  FutureOr<void> _initialize() async {
+    List<Flight?>? flights = [];
+    List<Train?>? trains = [];
+    List iteranary = [];
+
+    _trip = (await TripDbHandler().getTripById(widget.tripId))!;
+    print(_trip.toJSON());
+    for (int ts = _trip.startDate; ts <= _trip.endDate; ts += 86400000000) {
+      flights = await FlightDbHandler().getFlightsForTripAndDate(_trip.id!, ts);
+      trains = await TrainDbHandler().getTrainsForTripAndDate(_trip.id!, ts);
+      iteranary = [...?flights, ...?trains];
+      iteranary.sort((a, b) => a.eventTs.compareTo(b.eventTs));
+      setState(() {
+        _iteranaryList[ts] = iteranary;
+      });
+    }
+    refresh();
+  }
+
+  Widget _getIteranaryColumn() {
+    List<Widget> columnEntries = [];
+    _iteranaryList.forEach((key, value) {
+      columnEntries.add(IteranaryDateCard(date: key));
+      if (value != null) {
+        columnEntries.add(ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: value.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
+                child: card(value[index]),
+              );
+            }));
+      }
+    });
+
+    return Column(children: columnEntries);
   }
 }

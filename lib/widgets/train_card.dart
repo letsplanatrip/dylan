@@ -1,5 +1,6 @@
-import 'package:dylan/models/Train.dart';
+import 'package:dylan/models/train.dart';
 import 'package:dylan/pages/display/ticket_display.dart';
+import 'package:dylan/pages/forms/train_form.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,14 +8,24 @@ import 'package:intl/intl.dart';
 
 class IteranaryTrainCard extends StatefulWidget {
   final Train? train;
+  final Function()? notifyParent;
 
-  const IteranaryTrainCard({Key? key, required this.train}) : super(key: key);
+  const IteranaryTrainCard({Key? key, required this.train, this.notifyParent}) : super(key: key);
 
   @override
   State<IteranaryTrainCard> createState() => _IteranaryTrainCardState();
 }
 
 class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
+
+  late Train _train;
+
+  @override
+  void initState() {
+    super.initState();
+    _train = widget.train!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ExpansionTileCard(
@@ -34,14 +45,14 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
           Column(
             children: [
               Text(
-                widget.train!.source,
+                _train.source,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
               Text(
                 DateFormat.jm().format(DateTime.fromMicrosecondsSinceEpoch(
-                    widget.train!.departure)),
+                    _train.departure)),
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
@@ -52,14 +63,14 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
           Column(
             children: [
               Text(
-                widget.train!.destination,
+                _train.destination,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
               Text(
                 DateFormat.jm().format(
-                    DateTime.fromMicrosecondsSinceEpoch(widget.train!.arrival)),
+                    DateTime.fromMicrosecondsSinceEpoch(_train.arrival)),
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
@@ -69,7 +80,7 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
         ],
       ),
       trailing: Text(
-        "${widget.train!.name} ${widget.train!.trainId}",
+        "${_train.name} ${_train.trainId}",
         style: GoogleFonts.quicksand(
           textStyle: const TextStyle(color: Colors.black),
         ),
@@ -89,7 +100,7 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
             children: [
               Expanded(
                 child: Text(
-                  "PNR: ${widget.train!.pnr}",
+                  "PNR: ${_train.pnr}",
                   style: GoogleFonts.quicksand(
                     textStyle: const TextStyle(color: Colors.black),
                   ),
@@ -97,7 +108,7 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
               ),
               Expanded(
                 child: Text(
-                  "Seat: ${widget.train!.compartment}/${widget.train!.seat}/${widget.train!.berth}",
+                  "Seat: ${_train.compartment}/${_train.seat}/${_train.berth}",
                   style: GoogleFonts.quicksand(
                     textStyle: const TextStyle(color: Colors.black),
                   ),
@@ -105,7 +116,7 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
               ),
               Expanded(
                 child: Text(
-                  "Fare: Rs. ${widget.train!.fare}",
+                  "Fare: Rs. ${_train.fare}",
                   style: GoogleFonts.quicksand(
                     textStyle: const TextStyle(color: Colors.black),
                   ),
@@ -126,7 +137,7 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.train!.notes,
+                    _train.notes,
                     style: GoogleFonts.quicksand(
                       textStyle: const TextStyle(color: Colors.black),
                     ),
@@ -136,11 +147,12 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
                   width: 10,
                 ),
                 IconButton(
-                  onPressed: () => {
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //       builder: (context) => FlightEventForm(widget.train!)),
-                    // )
+                  onPressed: () async => {
+                    _train = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => TrainForm(_train)),
+                    ),
+                    widget.notifyParent!()
                   },
                   icon: const CircleAvatar(
                     backgroundColor: Colors.black,
@@ -152,7 +164,7 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) =>
-                              TicketDisplay(widget.train!.ticket)),
+                              TicketDisplay(_train.ticket)),
                     )
                   },
                   icon: const CircleAvatar(

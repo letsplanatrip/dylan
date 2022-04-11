@@ -26,6 +26,7 @@ class DbHelper {
     // Create the Flights Database
     await db.execute('''CREATE TABLE flights (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    eventTs INTEGER NOT NULL,
     flightId TEXT NOT NULL,
     name TEXT NOT NULL,
     pnr TEXT NOT NULL,

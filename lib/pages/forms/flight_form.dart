@@ -1,19 +1,20 @@
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:dylan/models/Flight.dart';
+import 'package:dylan/db/flight_db_handler.dart';
+import 'package:dylan/models/flight.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-class FlightEventForm extends StatefulWidget {
+class FlightForm extends StatefulWidget {
   final Flight _flight;
 
-  const FlightEventForm(this._flight, {Key? key}) : super(key: key);
+  const FlightForm(this._flight, {Key? key}) : super(key: key);
 
   @override
-  _FlightEventFormState createState() => _FlightEventFormState();
+  _FlightFormState createState() => _FlightFormState();
 }
 
-class _FlightEventFormState extends State<FlightEventForm> {
+class _FlightFormState extends State<FlightForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final flightIDController = TextEditingController();
   final flightNameController = TextEditingController();
@@ -52,8 +53,8 @@ class _FlightEventFormState extends State<FlightEventForm> {
     flightNameController.text = widget._flight.name;
     sourceController.text = widget._flight.source;
     destinationController.text = widget._flight.destination;
-    departureController.text = widget._flight.departure.toString();
-    arrivalController.text = widget._flight.arrival.toString();
+    departureController.text = DateTime.fromMicrosecondsSinceEpoch(widget._flight.departure).toString();
+    arrivalController.text = DateTime.fromMicrosecondsSinceEpoch(widget._flight.arrival).toString();
     pnrController.text = widget._flight.pnr;
     seatController.text = widget._flight.seat;
     fareController.text = widget._flight.fare.toString();
@@ -150,7 +151,7 @@ class _FlightEventFormState extends State<FlightEventForm> {
                     Flexible(
                       child: DateTimePicker(
                         type: DateTimePickerType.dateTime,
-                        dateMask: 'd/M/yy - hh:mm a',
+                        dateMask: 'EEE - d/M/yy - hh:mm a',
                         controller: departureController,
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2100),
@@ -167,7 +168,7 @@ class _FlightEventFormState extends State<FlightEventForm> {
                     Flexible(
                       child: DateTimePicker(
                         type: DateTimePickerType.dateTime,
-                        dateMask: 'd/M/yy - hh:mm a',
+                        dateMask: 'EEE - d/M/yy - hh:mm a',
                         controller: arrivalController,
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2100),
@@ -274,14 +275,14 @@ class _FlightEventFormState extends State<FlightEventForm> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.black),
                     ),
-                    onPressed: () => {
+                    onPressed: () async => {
                           _flight = Flight(
                               id: widget._flight.id,
                               flightId: flightIDController.text,
                               name: flightNameController.text,
                               pnr: pnrController.text,
-                              departure: int.parse(departureController.text),
-                              arrival: int.parse(arrivalController.text),
+                              departure: DateTime.parse(departureController.text).microsecondsSinceEpoch,
+                              arrival: DateTime.parse(arrivalController.text).microsecondsSinceEpoch,
                               source: sourceController.text,
                               destination: destinationController.text,
                               seat: seatController.text,
@@ -289,6 +290,8 @@ class _FlightEventFormState extends State<FlightEventForm> {
                               notes: notesController.text,
                               ticket: ticketController.text,
                               tripId: widget._flight.tripId),
+                      await FlightDbHandler().updateFlight(_flight),
+                      Navigator.pop(context, _flight),
                         },
                     child: const Text("Update")),
               ],

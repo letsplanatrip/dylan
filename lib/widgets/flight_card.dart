@@ -1,6 +1,6 @@
-import 'package:dylan/pages/forms/flight_event_form.dart';
+import 'package:dylan/pages/forms/flight_form.dart';
 import 'package:dylan/pages/display/ticket_display.dart';
-import 'package:dylan/models/Flight.dart';
+import 'package:dylan/models/flight.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,14 +8,23 @@ import 'package:intl/intl.dart';
 
 class IteranaryFlightCard extends StatefulWidget {
   final Flight? flight;
+  final Function()? notifyParent;
 
-  const IteranaryFlightCard({Key? key, required this.flight}) : super(key: key);
+  const IteranaryFlightCard({Key? key, this.flight, this.notifyParent}) : super(key: key);
 
   @override
   State<IteranaryFlightCard> createState() => _IteranaryFlightCardState();
 }
 
 class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
+  late Flight _flight;
+
+  @override
+  void initState() {
+    super.initState();
+    _flight = widget.flight!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ExpansionTileCard(
@@ -35,13 +44,14 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
           Column(
             children: [
               Text(
-                widget.flight!.source,
+                _flight.source,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
               Text(
-                DateFormat.jm().format(DateTime.fromMicrosecondsSinceEpoch(widget.flight!.departure)),
+                DateFormat.jm().format(
+                    DateTime.fromMicrosecondsSinceEpoch(_flight.departure)),
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
@@ -52,13 +62,14 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
           Column(
             children: [
               Text(
-                widget.flight!.destination,
+                _flight.destination,
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
               ),
               Text(
-                DateFormat.jm().format(DateTime.fromMicrosecondsSinceEpoch(widget.flight!.arrival)),
+                DateFormat.jm().format(
+                    DateTime.fromMicrosecondsSinceEpoch(_flight.arrival)),
                 style: GoogleFonts.quicksand(
                   textStyle: const TextStyle(color: Colors.black),
                 ),
@@ -68,7 +79,7 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
         ],
       ),
       trailing: Text(
-        "${widget.flight!.name} ${widget.flight!.flightId}",
+        "${_flight.name} ${_flight.flightId}",
         style: GoogleFonts.quicksand(
           textStyle: const TextStyle(color: Colors.black),
         ),
@@ -88,7 +99,7 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
             children: [
               Expanded(
                 child: Text(
-                  "PNR: ${widget.flight!.pnr}",
+                  "PNR: ${_flight.pnr}",
                   style: GoogleFonts.quicksand(
                     textStyle: const TextStyle(color: Colors.black),
                   ),
@@ -96,7 +107,7 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
               ),
               Expanded(
                 child: Text(
-                  "Seat: ${widget.flight!.seat}",
+                  "Seat: ${_flight.seat}",
                   style: GoogleFonts.quicksand(
                     textStyle: const TextStyle(color: Colors.black),
                   ),
@@ -104,7 +115,7 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
               ),
               Expanded(
                 child: Text(
-                  "Fare: Rs. ${widget.flight!.fare}",
+                  "Fare: Rs. ${_flight.fare}",
                   style: GoogleFonts.quicksand(
                     textStyle: const TextStyle(color: Colors.black),
                   ),
@@ -125,7 +136,7 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.flight!.notes,
+                    _flight.notes,
                     style: GoogleFonts.quicksand(
                       textStyle: const TextStyle(color: Colors.black),
                     ),
@@ -135,11 +146,13 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
                   width: 10,
                 ),
                 IconButton(
-                  onPressed: () => {
-                    Navigator.of(context).push(
+                  onPressed: () async =>
+                  {
+                    _flight = await Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (context) => FlightEventForm(widget.flight!)),
-                    )
+                          builder: (context) => FlightForm(_flight)),
+                    ),
+                    widget.notifyParent!()
                   },
                   icon: const CircleAvatar(
                     backgroundColor: Colors.black,
@@ -147,11 +160,11 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () => {
+                  onPressed: () =>
+                  {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (context) =>
-                              TicketDisplay(widget.flight!.ticket)),
+                          builder: (context) => TicketDisplay(_flight.ticket)),
                     )
                   },
                   icon: const CircleAvatar(

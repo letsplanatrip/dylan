@@ -1,5 +1,6 @@
 class Train {
   final int? id;
+  int? eventTs;
   final String trainId;
   final String name;
   final String pnr;
@@ -14,43 +15,50 @@ class Train {
   final int fare;
   final String notes;
   final String ticket;
-  final String tripId;
+  final int tripId;
 
-  Train({this.id,
-        required this.trainId,
-        required this.name,
-        required this.pnr,
-        required this.departure,
-        required this.arrival,
-        required this.source,
-        required this.destination,
-        required this.compartment,
-        required this.seat,
-        required this.berth,
-        required this.status,
-        required this.fare,
-        required this.notes,
-        required this.ticket,
-        required this.tripId});
+  Train(
+      {this.id,
+      this.eventTs,
+      required this.trainId,
+      required this.name,
+      required this.pnr,
+      required this.departure,
+      required this.arrival,
+      required this.source,
+      required this.destination,
+      required this.compartment,
+      required this.seat,
+      required this.berth,
+      required this.status,
+      required this.fare,
+      required this.notes,
+      required this.ticket,
+      required this.tripId}) {
+    eventTs = departure;
+  }
 
-  Train copy({int? id,
-        String? trainId,
-        String? name,
-        String? pnr,
-        int? departure,
-        int? arrival,
-        String? source,
-        String? destination,
-        String? compartment,
-        String? seat,
-        String? berth,
-        String? status,
-        int? fare,
-        String? notes,
-        String? ticket,
-        String? tripId}) =>
+  Train copy(
+          {int? id,
+          int? eventTs,
+          String? trainId,
+          String? name,
+          String? pnr,
+          int? departure,
+          int? arrival,
+          String? source,
+          String? destination,
+          String? compartment,
+          String? seat,
+          String? berth,
+          String? status,
+          int? fare,
+          String? notes,
+          String? ticket,
+            int? tripId}) =>
       Train(
           id: id ?? this.id,
+          eventTs: eventTs ?? this.eventTs,
           trainId: trainId ?? this.trainId,
           name: name ?? this.name,
           pnr: pnr ?? this.pnr,
@@ -69,6 +77,7 @@ class Train {
 
   static Train fromJSON(Map<String, dynamic> json) => Train(
       id: int.parse(json['id'].toString()),
+      eventTs: int.parse(json['eventTs'].toString()),
       trainId: json['trainId'],
       name: json['name'],
       pnr: json['pnr'],
@@ -83,24 +92,25 @@ class Train {
       fare: int.parse(json['fare'].toString()),
       notes: json['notes'],
       ticket: json['ticket'],
-      tripId: json['tripId']);
+      tripId: int.parse(json['tripId'].toString()));
 
   toJSON() => {
-    "id": id,
-    "trainId": trainId,
-    "name": name,
-    "pnr": pnr,
-    "departure": departure,
-    "arrival": arrival,
-    "source": source,
-    "destination": destination,
-    "compartment": compartment,
-    "seat": seat,
-    "berth": berth,
-    "status": status,
-    "fare": fare,
-    "notes": notes,
-    "ticket": ticket,
-    "tripId": tripId
-  };
+        "id": id,
+        "eventTs": eventTs,
+        "trainId": trainId,
+        "name": name,
+        "pnr": pnr,
+        "departure": departure,
+        "arrival": arrival,
+        "source": source,
+        "destination": destination,
+        "compartment": compartment,
+        "seat": seat,
+        "berth": berth,
+        "status": status,
+        "fare": fare,
+        "notes": notes,
+        "ticket": ticket,
+        "tripId": tripId
+      };
 }

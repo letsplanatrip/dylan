@@ -1,5 +1,6 @@
 class Flight {
   final int? id;
+  int? eventTs;
   final String flightId;
   final String name;
   final String pnr;
@@ -11,10 +12,11 @@ class Flight {
   final int fare;
   final String notes;
   final String ticket;
-  final String tripId;
+  final int tripId;
 
   Flight(
       {this.id,
+      this.eventTs,
       required this.flightId,
       required this.name,
       required this.pnr,
@@ -26,10 +28,13 @@ class Flight {
       required this.fare,
       required this.notes,
       required this.ticket,
-      required this.tripId});
+      required this.tripId}) {
+    eventTs = departure;
+  }
 
   Flight copy(
           {int? id,
+          int? eventTs,
           String? flightId,
           String? name,
           String? pnr,
@@ -41,9 +46,10 @@ class Flight {
           int? fare,
           String? notes,
           String? ticket,
-          String? tripId}) =>
+          int? tripId}) =>
       Flight(
           id: id ?? this.id,
+          eventTs: eventTs ?? this.eventTs,
           flightId: flightId ?? this.flightId,
           name: name ?? this.name,
           pnr: pnr ?? this.pnr,
@@ -57,23 +63,25 @@ class Flight {
           ticket: ticket ?? this.ticket,
           tripId: tripId ?? this.tripId);
 
-  static Flight fromJSON(Map<String, dynamic> flightJSON) => Flight(
-      id: int.parse(flightJSON['id'].toString()),
-      flightId: flightJSON['flightId'],
-      name: flightJSON['name'],
-      pnr: flightJSON['pnr'],
-      departure: int.parse(flightJSON['departure'].toString()),
-      arrival: int.parse(flightJSON['arrival'].toString()),
-      source: flightJSON['source'],
-      destination: flightJSON['destination'],
-      seat: flightJSON['seat'],
-      fare: int.parse(flightJSON['fare'].toString()),
-      notes: flightJSON['notes'],
-      ticket: flightJSON['ticket'],
-      tripId: flightJSON['tripId']);
+  static Flight fromJSON(Map<String, dynamic> json) => Flight(
+      id: int.parse(json['id'].toString()),
+      eventTs: int.parse(json['eventTs'].toString()),
+      flightId: json['flightId'],
+      name: json['name'],
+      pnr: json['pnr'],
+      departure: int.parse(json['departure'].toString()),
+      arrival: int.parse(json['arrival'].toString()),
+      source: json['source'],
+      destination: json['destination'],
+      seat: json['seat'],
+      fare: int.parse(json['fare'].toString()),
+      notes: json['notes'],
+      ticket: json['ticket'],
+      tripId: int.parse(json['tripId'].toString()));
 
   toJSON() => {
         "id": id,
+        "eventTs": eventTs,
         "flightId": flightId,
         "name": name,
         "pnr": pnr,

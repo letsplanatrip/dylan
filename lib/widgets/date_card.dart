@@ -1,6 +1,6 @@
-import 'package:dylan/pages/forms/flight_event_form.dart';
+import 'package:dylan/pages/forms/flight_form.dart';
 import 'package:dylan/pages/display/ticket_display.dart';
-import 'package:dylan/models/Flight.dart';
+import 'package:dylan/models/flight.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

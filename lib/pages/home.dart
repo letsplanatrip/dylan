@@ -1,7 +1,8 @@
 import 'package:dylan/db/flight_db_handler.dart';
 import 'package:dylan/db/train_db_handler.dart';
-import 'package:dylan/models/Flight.dart';
-import 'package:dylan/models/Train.dart';
+import 'package:dylan/db/trip_db_handler.dart';
+import 'package:dylan/models/flight.dart';
+import 'package:dylan/models/train.dart';
 import 'package:dylan/pages/iteranary.dart';
 import 'package:flutter/material.dart';
 
@@ -36,13 +37,9 @@ class _HomeState extends State<Home> {
                 backgroundColor: MaterialStateProperty.all(Colors.black),
               ),
               onPressed: () async => {
-                    flights = await getFlights(),
-                    trains = await getTrains(),
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => Iteranary(
-                          flights, trains
-                        ),
+                        builder: (context) => const Iteranary(1),
                       ),
                     )
                   },
@@ -52,15 +49,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<List<Flight?>?> getFlights() async {
-    return await FlightDbHandler().getFlightsForTrip("trip001");
-  }
-
-  Future<List<Train?>?> getTrains() async {
-    return await TrainDbHandler().getTrainsForTrip("trip001");
-  }
-
   Future<void> initDB() async {
+    await TripDbHandler().initTrips();
     await FlightDbHandler().initFlights();
     await TrainDbHandler().initTrains();
   }
