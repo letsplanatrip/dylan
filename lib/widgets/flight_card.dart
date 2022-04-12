@@ -42,6 +42,7 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 _flight.source,
@@ -60,6 +61,7 @@ class _IteranaryFlightCardState extends State<IteranaryFlightCard> {
           ),
           const Icon(Icons.arrow_right_alt_rounded, color: Colors.black),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 _flight.destination,

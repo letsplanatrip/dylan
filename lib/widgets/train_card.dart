@@ -43,6 +43,7 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 _train.source,
@@ -61,6 +62,7 @@ class _IteranaryTrainCardState extends State<IteranaryTrainCard> {
           ),
           const Icon(Icons.arrow_right_alt_rounded, color: Colors.black),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 _train.destination,
