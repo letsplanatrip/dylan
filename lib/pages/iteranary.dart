@@ -8,7 +8,7 @@ import 'package:dylan/models/Trip.dart';
 import 'package:dylan/models/flight.dart';
 import 'package:dylan/models/hotel.dart';
 import 'package:dylan/models/train.dart';
-import 'package:dylan/widgets/date_card.dart';
+import 'package:dylan/widgets/collapsable_date_card.dart';
 import 'package:dylan/widgets/flight_card.dart';
 import 'package:dylan/widgets/hotel_card.dart';
 import 'package:dylan/widgets/train_card.dart';
@@ -40,9 +40,9 @@ class _IteranaryState extends State<Iteranary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white70,
       appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.black87,
           centerTitle: true,
           title: TextButton.icon(
               icon: const Icon(
@@ -111,19 +111,19 @@ class _IteranaryState extends State<Iteranary> {
   Widget _getIteranaryColumn() {
     List<Widget> columnEntries = [];
     _iteranaryList.forEach((key, value) {
-      columnEntries.add(IteranaryDateCard(date: key));
-      if (value != null) {
-        columnEntries.add(ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: value.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 1.5, 0.0, 1.5),
-                child: card(key, value[index]),
-              );
-            }));
-      }
+      columnEntries.add(CollapsableDateCard(
+          date: key,
+          iteranaryList: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: value!.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 3, 10, 2),
+                  child: card(key, value[index]),
+                );
+              })));
+      columnEntries.add(const SizedBox(height: 5));
     });
 
     return Column(children: columnEntries);
