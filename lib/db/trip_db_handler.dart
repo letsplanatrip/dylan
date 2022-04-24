@@ -50,4 +50,10 @@ class TripDbHandler {
         await db?.query(_table, where: "id = ?", whereArgs: [id]);
     return result?.map((json) => Trip.fromJSON(json)).toList().first;
   }
+
+  Future<List<Trip?>?> getAllTrips() async {
+    final db = await DbHelper.instance.db;
+    List<Map<String, Object?>>? result = await db?.query(_table);
+    return result?.map((json) => Trip.fromJSON(json)).toList();
+  }
 }
